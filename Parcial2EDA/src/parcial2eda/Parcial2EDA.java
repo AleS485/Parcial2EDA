@@ -1,4 +1,3 @@
-
 package parcial2eda;
 
 public class Parcial2EDA {
@@ -23,7 +22,7 @@ public class Parcial2EDA {
             for (int j = 0; j < matrizResultado[i].length; j++) {
                 System.out.print((matrizResultado[i][j] == 1000 ? "X" : matrizResultado[i][j]) + "\t");
             }
-            System.out.println();
+            System.out.println(); //
         }
     }
 }
