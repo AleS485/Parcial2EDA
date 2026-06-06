@@ -95,5 +95,5 @@ public class Jugador {
         return "Jugador{" + "nombreJugador=" + nombreJugador + ", hp=" + hp + ", nivel=" + nivel + ", mochila="
                 + mochila + ", misiones=" + misiones + ", posicion=" + posicion + '}';
     }
-
+    // prueba
 }
