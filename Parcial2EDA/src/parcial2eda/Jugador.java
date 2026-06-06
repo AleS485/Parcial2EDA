@@ -1,4 +1,3 @@
-
 package parcial2eda;
 
 import java.util.ArrayList;
@@ -54,17 +53,21 @@ public class Jugador {
         this.mochila = mochila;
     }
 
+    
     public ArrayList<Mision> getMisiones() {
         return misiones;
     }
+
 
     public void setMisiones(ArrayList<Mision> misiones) {
         this.misiones = misiones;
     }
 
+
     public Mapa getPosicion() {
         return posicion;
     }
+
 
     public void setPosicion(int i_destino) {
         Mapa destino = mundo.getMapa(i_destino);
@@ -76,6 +79,7 @@ public class Jugador {
         }
         this.posicion = destino;
     }
+
 
     public void verCaminos() {
         /* ArrayList<Mapa> mapasDisponibles = mundo.getCaminosDisponiblesMapa(this.posicion);
@@ -90,10 +94,14 @@ public class Jugador {
         mundo.imprimirCaminos(this.posicion);
     }
 
+
     @Override
     public String toString() {
         return "Jugador{" + "nombreJugador=" + nombreJugador + ", hp=" + hp + ", nivel=" + nivel + ", mochila="
                 + mochila + ", misiones=" + misiones + ", posicion=" + posicion + '}';
     }
+    // prueba
+
+
 
 }
