@@ -60,12 +60,12 @@ public class Mundo {
             matrizAdy[i][i] = 0;
         }
 
-        conectar(puebloInicio, bosque, 15);
+        conectar(puebloInicio, bosque, 150);
         conectar(bosque, cueva, 2);
         conectar(cueva, ciudad, 10);
         conectar(ciudad, mazmorra, 20);
         conectar(mazmorra, castillo, 35);
-
+        conectar(mazmorra, bosque, 35);
         System.out.println("Mundo Inicializado correctamente");
 
     }
