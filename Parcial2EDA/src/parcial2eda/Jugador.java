@@ -4,10 +4,8 @@ package parcial2eda;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-
 public class Jugador {
-    
+    private Mundo mundo = Mundo.getMundo();
     public String nombreJugador;
     public int hp;
     public int nivel;
@@ -20,8 +18,10 @@ public class Jugador {
         this.hp = 50;
         this.nivel = 1;
         this.posicion = posicionInicial;
+        this.mochila = new HashMap<>();
+        this.misiones = new ArrayList<>();
     }
-    
+
     public String getNombreJugador() {
         return nombreJugador;
     }
@@ -66,30 +66,34 @@ public class Jugador {
         return posicion;
     }
 
-    public void setPosicion(int posicion) {
-        
-        
-        Mundo mundo = Mundo.getMundo();
-        ArrayList<Mapa> mapas = mundo.verMapasDisponibles(this.posicion);
-        
-        if(mundo.getVertices().indexOf(this.posicion))
-        
-        //jugador1.setPosicion(Mundo.getMundo().);
+    public void setPosicion(int i_destino) {
+        Mapa destino = mundo.getMapa(i_destino);
+        if (destino == null)
+            return;
+        ArrayList<Mapa> mapasDisponibles = mundo.getCaminosDisponiblesMapa(this.posicion);
+        if (!mapasDisponibles.contains(destino)) {
+            System.out.println("Movimiento no permitido!");
+        }
+        this.posicion = destino;
+    }
+
+    public void verCaminos() {
+        /* ArrayList<Mapa> mapasDisponibles = mundo.getCaminosDisponiblesMapa(this.posicion);
+
+        System.out.println("Estas en:" + this.posicion.getNombreLugar());
+        System.out.println("Y podes ir a: ");
+
+        for (Mapa m : mapasDisponibles) {
+            System.out.println(m);
+        } */
+
+        mundo.imprimirCaminos(this.posicion);
     }
 
     @Override
     public String toString() {
-        return "Jugador{" + "nombreJugador=" + nombreJugador + ", hp=" + hp + ", nivel=" + nivel + ", mochila=" + mochila + ", misiones=" + misiones + ", posicion=" + posicion + '}';
+        return "Jugador{" + "nombreJugador=" + nombreJugador + ", hp=" + hp + ", nivel=" + nivel + ", mochila="
+                + mochila + ", misiones=" + misiones + ", posicion=" + posicion + '}';
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 }
