@@ -221,6 +221,20 @@ public class Mundo {
         return r;
     }
     
+    public List<String> encontrarCaminoOptimo(Mapa origen, Integer destino) {
+        var i_origen = vertices.indexOf(origen);
+        var listaMapas = new LinkedList<String>();
+        var caminos = FloydWarshall().get("caminos");
+        for (int i = destino.intValue(); i != i_origen; i = caminos[i_origen][i]) {
+            listaMapas.add(vertices.get(i).getNombreLugar());
+        }
+        return listaMapas.reversed();
+    }
+
+    
+
+    /* Copia por las dudas
+    
     public List<Integer> encontrarCaminoOptimo(Mapa origen, Integer destino) {
         var i_origen = vertices.indexOf(origen);
         var listaMapas = new LinkedList<Integer>();
@@ -231,6 +245,9 @@ public class Mundo {
         return listaMapas.reversed();
     }
 
+
+    
+    */
 
 
 
