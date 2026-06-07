@@ -5,6 +5,7 @@ package parcial2eda;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -61,7 +62,7 @@ public class Mundo {
             matrizAdy[i][i] = 0;
         }
 
-        conectar(puebloInicio, bosque, 150);
+        conectar(puebloInicio, bosque, 15);
         conectar(bosque, cueva, 2);
         conectar(cueva, ciudad, 10);
         conectar(ciudad, mazmorra, 20);
@@ -219,5 +220,18 @@ public class Mundo {
         r.put("caminos", caminos);
         return r;
     }
+    
+    public List<Integer> encontrarCaminoOptimo(Mapa origen, Integer destino) {
+        var i_origen = vertices.indexOf(origen);
+        var listaMapas = new LinkedList<Integer>();
+        var caminos = FloydWarshall().get("caminos");
+        for (int i = destino.intValue(); i != i_origen; i = caminos[i_origen][i]) {
+            listaMapas.add(i);
+        }
+        return listaMapas.reversed();
+    }
+
+
+
 
 }

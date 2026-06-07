@@ -1,5 +1,7 @@
 package parcial2eda;
 
+import java.util.Arrays;
+
 public class Parcial2EDA {
 
     public static void main(String[] args) {
@@ -14,6 +16,9 @@ public class Parcial2EDA {
 
         mostrarMatrizResultante(matrices.get("costos"), "--- Matriz de Costos Mínimos (Floyd-Warshall) ---");
         mostrarMatrizResultante(matrices.get("caminos"), "--- Mapa con caminos optimos disponibles ---");
+
+        var lista = mundo.encontrarCaminoOptimo(jugador1.getPosicion(), 5);
+        System.out.println(Arrays.toString(lista.toArray()));
     }
 
     static void mostrarMatrizResultante(Integer[][] matrizResultado, String header) {
