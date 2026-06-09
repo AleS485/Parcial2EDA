@@ -7,18 +7,23 @@ public class Parcial2EDA {
     public static void main(String[] args) {
 
         Mundo mundo = Mundo.getMundo();
-        Jugador jugador1 = new Jugador("Pepe Argento", mundo.getVertices().get(0));
-
+        Jugador j1 = new Jugador("Pepe Argento", mundo.getVertices().get(0));
         mundo.imprimirMatriz();
-        jugador1.verCaminos();
+        j1.verCaminos();
 
         var matrices = mundo.FloydWarshall();
 
         mostrarMatrizResultante(matrices.get("costos"), "--- Matriz de Costos Mínimos (Floyd-Warshall) ---");
         mostrarMatrizResultante(matrices.get("caminos"), "--- Mapa con caminos optimos disponibles ---");
 
-        var lista = mundo.encontrarCaminoOptimo(jugador1.getPosicion(), 5);
+        var lista = mundo.encontrarCaminoOptimo(j1.getPosicion(), 5);
         System.out.println(Arrays.toString(lista.toArray()));
+
+        Mision quest = new Mision("Forkear un repo", "Forkear un repo", () -> {
+            System.out.println("Equis de =)");
+        });
+        j1.aceptarMision(quest);
+        j1.checkMision(quest);
     }
 
     static void mostrarMatrizResultante(Integer[][] matrizResultado, String header) {

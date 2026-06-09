@@ -3,14 +3,18 @@ package parcial2eda;
 
 
 public class Mision {
-    
+    public interface Cb {
+        public void exec();
+    }
     public String objetivoMision;
     public int idMision;
     public boolean estadoMision;
+    private Cb cb;
 
-    public Mision(String objetivoMision, boolean estadoMision) {
+    public Mision(String nombre, String objetivoMision, Cb cb) {
         this.objetivoMision = objetivoMision;
-        this.estadoMision = estadoMision;
+        this.estadoMision = false;
+        this.cb = cb;
     }
 
     public String getObjetivoMision() {
@@ -30,17 +34,16 @@ public class Mision {
     }
 
     // despues
-    public void completarMision(Jugador jugador){
-        
-        
-        
-        
+    public boolean completarMision(Jugador jugador){
+        // si el jugador cumple los requisitos...
+        cb.exec();
+        return true;
     }
     
     
     public void completarMision(){
-        
-        switch(idMision){
+        cb.exec();
+        /* switch(idMision){
             case 1: 
                 // recuperar algo en la cueva
                 System.out.println("Recuperaste el caliz en la cueva");
@@ -52,7 +55,7 @@ public class Mision {
                 break;
                 
                     
-        }
+        } */
         
         
     }

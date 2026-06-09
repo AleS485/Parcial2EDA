@@ -21,6 +21,11 @@ public class Jugador {
         this.misiones = new ArrayList<>();
     }
 
+    public void aceptarMision(Mision m) {
+        if (misiones.contains(m)) return;
+        misiones.add(m);
+    }
+
     public String getNombreJugador() {
         return nombreJugador;
     }
@@ -78,6 +83,10 @@ public class Jugador {
             System.out.println("Movimiento no permitido!");
         }
         this.posicion = destino;
+    }
+
+    public boolean checkMision(Mision m) {
+        return m.completarMision(this);
     }
 
 
