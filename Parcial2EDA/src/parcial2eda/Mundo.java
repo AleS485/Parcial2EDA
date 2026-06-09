@@ -4,14 +4,15 @@ package parcial2eda;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class Mundo {
 
-    Integer matrizAdy[][];
+    Integer[][] matrizAdy;
+    Integer[][] matrizCostos;
+    Integer[][] matrizCaminos;
+
     ArrayList<Mapa> vertices;
     private static final Integer CANTIDADMAXIMA = 10;
     private static final Integer SINCONEXION = null;
@@ -19,6 +20,8 @@ public class Mundo {
 
     private Mundo() {
         matrizAdy = new Integer[CANTIDADMAXIMA][CANTIDADMAXIMA];
+        this.matrizCostos = new Integer[CANTIDADMAXIMA][CANTIDADMAXIMA];
+        this.matrizCaminos = new Integer[CANTIDADMAXIMA][CANTIDADMAXIMA];
         vertices = new ArrayList<>(CANTIDADMAXIMA);
         inicializarGrafo();
     }
@@ -35,16 +38,17 @@ public class Mundo {
             for (int j = 0; j < CANTIDADMAXIMA; j++) {
                 matrizAdy[i][j] = 1000;
             }
-
         }
         Mapa puebloInicio = new Mapa();
-        puebloInicio.setNombreLugar("Pueblo Inicio");
+        puebloInicio.setNombreLugar("Pueblo Primavera");
         Mapa cueva = new Mapa();
         cueva.setNombreLugar("cueva");
         Mapa ciudad = new Mapa();
         ciudad.setNombreLugar("ciudad");
         Mapa bosque = new Mapa();
         bosque.setNombreLugar("bosque");
+        Mapa inframundo = new Mapa();
+        inframundo.setNombreLugar("inframundo");
         Mapa mazmorra = new Mapa();
         mazmorra.setNombreLugar("mazmorra");
         Mapa castillo = new Mapa();
@@ -57,6 +61,7 @@ public class Mundo {
         vertices.add(bosque);
         vertices.add(mazmorra);
         vertices.add(castillo);
+        vertices.add(inframundo);
 
         for (int i = 0; i < matrizAdy.length; i++) {
             matrizAdy[i][i] = 0;
@@ -68,17 +73,21 @@ public class Mundo {
         conectar(ciudad, mazmorra, 20);
         conectar(mazmorra, castillo, 35);
         conectar(mazmorra, bosque, 35);
+        FloydWarshall();
         System.out.println("Mundo Inicializado correctamente");
+    }
 
+    public Integer[][] getMatrizCaminos() {
+        return this.matrizCaminos;
+    }
+    public Integer[][] getMatrizCostos() {
+        return this.matrizCostos;
     }
 
     public void conectar(Mapa mapa1, Mapa mapa2, int distancia) {
-
-        this.matrizAdy = matrizAdy;
-
         matrizAdy[vertices.indexOf(mapa1)][vertices.indexOf(mapa2)] = distancia;
         matrizAdy[vertices.indexOf(mapa2)][vertices.indexOf(mapa1)] = distancia;
-
+        FloydWarshall();
     }
 
     public Mapa getMapa(int indice) {
@@ -120,35 +129,39 @@ public class Mundo {
         return mapasDisponibles;
     }
 
-    public void imprimirCaminos(Mapa mapa) {
-        var indiceMapa = vertices.indexOf(mapa);
-        var mapitas = getCaminosDisponiblesMapa(mapa);
-        System.out.println("Estas en:" + mapa.nombreLugar);
-        System.out.println("Y podes ir a: ");
-        for (var m : mapitas) {
-            var i = vertices.indexOf(m);
-            System.out.println(
-                    "[" + i + "]" + m.getNombreLugar() + ", distancia hasta llegar: " + matrizAdy[indiceMapa][i]);
-        }
-    }
+    // hasta longitud de mi arreglo de mapas, caminos optimos
+    public void detectorZonasInaccesibles(Mapa posicionActual){
 
-    public void vecindadIzquierda(Mapa mapa) {
+        int indiceOrigen = vertices.indexOf(posicionActual);
 
-        int indiceMapa = vertices.indexOf(mapa);
-
-        if (indiceMapa == -1) {
-            System.out.println("No se encontro ese mapa");
+        if (indiceOrigen == -1) {
+            System.out.println("ESTE MAPA NO EXISTE EN EL MUNDO");
             return;
         }
 
-        for (int i = 0; i < matrizAdy.length; i++) {
-            if (matrizAdy[i][indiceMapa] == null || indiceMapa == i) {
-            } else {
-                System.out.println("Podes volver a: " + vertices.get(i));
+        System.out.println("SE ESTAN ANALIZANDO CAMINOS INNACESIBLES DESDE: " + posicionActual.getNombreLugar());
+
+        boolean flagInaccesible = false;
+
+        for(int i = 0; i < vertices.size(); i++){
+
+            if(indiceOrigen != i && matrizCaminos[indiceOrigen][i] == -1){
+
+                System.out.println(vertices.get(i).getNombreLugar() + ", es un camino innacesible");
+                flagInaccesible = true;
             }
+
+
         }
 
+        if(!flagInaccesible){
+            System.out.println("No se encontraron caminos innacesibles desde: " + posicionActual.getNombreLugar());
+        }
+
+
+
     }
+
 
     public void imprimirMatriz() {
         for (int i = 0; i < CANTIDADMAXIMA; i++) {
@@ -184,18 +197,16 @@ public class Mundo {
         this.vertices = vertices;
     }
 
-    public HashMap<String, Integer[][]> FloydWarshall() {
+    public void FloydWarshall() {
         Integer n = matrizAdy.length;
-        Integer[][] costos = new Integer[n][n];
-        Integer[][] caminos = new Integer[n][n];
         // Inicializamos las matrices.
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                costos[i][j] = matrizAdy[i][j];
+                matrizCostos[i][j] = matrizAdy[i][j];
                 if (i != j && matrizAdy[i][j] != 1000) {
-                    caminos[i][j] = i;
+                    matrizCaminos[i][j] = i;
                 } else {
-                    caminos[i][j] = -1;
+                    matrizCaminos[i][j] = -1;
                 }
             }
         }
@@ -203,29 +214,21 @@ public class Mundo {
         for (int k = 0; k < n; k++) {
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-
-                    if (costos[i][k] != 1000 && costos[k][j] != 1000) {
-
-                        if (costos[i][j] > costos[i][k] + costos[k][j]) {
-                            costos[i][j] = costos[i][k] + costos[k][j];
-                            caminos[i][j] = caminos[k][j];
+                    if (matrizCostos[i][k] != 1000 && matrizCostos[k][j] != 1000) {
+                        if (matrizCostos[i][j] > matrizCostos[i][k] + matrizCostos[k][j]) {
+                            matrizCostos[i][j] = matrizCostos[i][k] + matrizCostos[k][j];
+                            matrizCaminos[i][j] = matrizCaminos[k][j];
                         }
                     }
                 }
             }
         }
-
-        HashMap r = new HashMap<String, Integer[][]>();
-        r.put("costos", costos);
-        r.put("caminos", caminos);
-        return r;
     }
     
     public List<String> encontrarCaminoOptimo(Mapa origen, Integer destino) {
         var i_origen = vertices.indexOf(origen);
         var listaMapas = new LinkedList<String>();
-        var caminos = FloydWarshall().get("caminos");
-        for (int i = destino.intValue(); i != i_origen; i = caminos[i_origen][i]) {
+        for (int i = destino.intValue(); i != i_origen; i = matrizCaminos[i_origen][i]) {
             listaMapas.add(vertices.get(i).getNombreLugar());
         }
         return listaMapas.reversed();

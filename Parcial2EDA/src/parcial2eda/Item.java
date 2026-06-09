@@ -2,8 +2,8 @@ package parcial2eda;
 
 
 public class Item {
-    
-    public String nombreItem;
+
+    private String nombreItem;
     
     
     public Item(String nombreItem) {

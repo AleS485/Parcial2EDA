@@ -50,6 +50,22 @@ public class Pnj {
         this.vida = vida;
     }
 
+    public void atacar(Jugador jugador){
+        if(!this.hostil) return;
+
+        int dañoPnj = 15; 
+        int hpJugadorObjetivo = jugador.getHp();
+        jugador.setHp(hpJugadorObjetivo - dañoPnj);
+        System.out.println(this.nombrePnj + "ataco a: " + jugador.getNombreJugador() + ", le saco" + dañoPnj + " de HP");
+        
+        
+    
+    }
+
+
+
+
+
     @Override
     public String toString() {
         return "Pnj{" + "nombrePnj=" + nombrePnj + ", vida=" + vida + ", hostil=" + hostil + ", mision=" + mision + '}';

@@ -3,18 +3,18 @@ package parcial2eda;
 
 
 public class Mision {
-    public interface Cb {
-        public void exec();
+    public interface ICMision {
+        public boolean exec(Mision m, Jugador j);
     }
     public String objetivoMision;
     public int idMision;
     public boolean estadoMision;
-    private Cb cb;
+    private ICMision icom_mision;
 
-    public Mision(String nombre, String objetivoMision, Cb cb) {
+    public Mision(String nombre, String objetivoMision, ICMision icom_mision) {
         this.objetivoMision = objetivoMision;
         this.estadoMision = false;
-        this.cb = cb;
+        this.icom_mision = icom_mision;
     }
 
     public String getObjetivoMision() {
@@ -29,35 +29,14 @@ public class Mision {
         return estadoMision;
     }
 
-    public void setEstadoMision(boolean estadoMision) {
+    public boolean setEstadoMision(boolean estadoMision) {
         this.estadoMision = estadoMision;
+        return estadoMision;
     }
 
-    // despues
+    
     public boolean completarMision(Jugador jugador){
-        // si el jugador cumple los requisitos...
-        cb.exec();
-        return true;
-    }
-    
-    
-    public void completarMision(){
-        cb.exec();
-        /* switch(idMision){
-            case 1: 
-                // recuperar algo en la cueva
-                System.out.println("Recuperaste el caliz en la cueva");
-                System.out.println("Ahora podes acceder a la cueva");
-                // conexion y texto
-                break;
-            case 2:
-                System.out.println("hola");
-                break;
-                
-                    
-        } */
-        
-        
+        return icom_mision.exec(this, jugador);
     }
     
     

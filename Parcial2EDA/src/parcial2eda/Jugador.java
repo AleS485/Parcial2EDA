@@ -4,26 +4,49 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Jugador {
-    private Mundo mundo = Mundo.getMundo();
-    public String nombreJugador;
-    public int hp;
-    public int nivel;
-    public HashMap<Item, Integer> mochila;
-    public ArrayList<Mision> misiones;
-    public Mapa posicion;
 
-    public Jugador(String nombreJugador, Mapa posicionInicial) {
+    private Mundo mundo = Mundo.getMundo();
+    private String nombreJugador;
+    private int hp;
+    private int maxHP = 100;
+    private int nivel;
+    private HashMap<Item, Integer> mochila;
+    private ArrayList<Mision> misiones;
+    private Mapa posicion;
+    private HashMap<String, Integer> monstruosMatados;
+
+    public Jugador(String nombreJugador) {
         this.nombreJugador = nombreJugador;
-        this.hp = 50;
+        this.hp = 100;
         this.nivel = 1;
-        this.posicion = posicionInicial;
+        this.posicion = mundo.getMapa(0);
         this.mochila = new HashMap<>();
         this.misiones = new ArrayList<>();
+        this.monstruosMatados = new HashMap<>();
+
+        initMisiones();
+    }
+
+    public void recoger(Item i) {
+        var c = mochila.get(i);
+        mochila.put(i, c == null ? 1 : c + 1);
+        checkMisiones();
+    }
+
+    private void checkMisiones() {
+        for (var m : misiones)
+            m.completarMision(this);
     }
 
     public void aceptarMision(Mision m) {
-        if (misiones.contains(m)) return;
+        if (misiones.contains(m))
+            return;
         misiones.add(m);
+        checkMisiones();
+    }
+
+    public void abandonarMision(Mision m) {
+        misiones.remove(m);
     }
 
     public String getNombreJugador() {
@@ -40,6 +63,21 @@ public class Jugador {
 
     public void setHp(int hp) {
         this.hp = hp;
+        if (hp > maxHP)
+            hp = maxHP;
+        if (hp <= 0) {
+            System.out.println("MORISTE, COMO TE VA A MATAR ESE CHOBI? XD");
+        }
+    }
+
+    public int getmaxHP() {
+
+        return maxHP;
+
+    }
+
+    public void setMaxHp(int maxHP) {
+        this.maxHP = maxHP;
     }
 
     public int getNivel() {
@@ -48,6 +86,7 @@ public class Jugador {
 
     public void setNivel(int nivel) {
         this.nivel = nivel;
+        checkMisiones();
     }
 
     public HashMap<Item, Integer> getMochila() {
@@ -58,21 +97,21 @@ public class Jugador {
         this.mochila = mochila;
     }
 
-    
     public ArrayList<Mision> getMisiones() {
         return misiones;
     }
-
-
-    public void setMisiones(ArrayList<Mision> misiones) {
-        this.misiones = misiones;
-    }
-
 
     public Mapa getPosicion() {
         return posicion;
     }
 
+    public void subirDeNivel() {
+        this.maxHP += 20;
+        this.hp = this.maxHP;
+        this.nivel += 1;
+        System.out.println("Felicidades, subiste al nivel:" + this.nivel);
+        checkMisiones();
+    }
 
     public void setPosicion(int i_destino) {
         Mapa destino = mundo.getMapa(i_destino);
@@ -83,34 +122,68 @@ public class Jugador {
             System.out.println("Movimiento no permitido!");
         }
         this.posicion = destino;
+        checkMisiones();
     }
 
     public boolean checkMision(Mision m) {
         return m.completarMision(this);
     }
 
+    public void atacar(Pnj enemigo) {
 
-    public void verCaminos() {
-        /* ArrayList<Mapa> mapasDisponibles = mundo.getCaminosDisponiblesMapa(this.posicion);
+        if (!enemigo.isHostil()) {
+            System.out.println("El pnj :" + enemigo.getNombrePnj() + " es amistoso, no lo podes atacar");
+            return;
+        }
 
-        System.out.println("Estas en:" + this.posicion.getNombreLugar());
-        System.out.println("Y podes ir a: ");
+        int dañoJugador = 15 + (int) (Math.random() * 6);
+        int vidaEnemigoPeleando = enemigo.getVida();
+        enemigo.setVida(vidaEnemigoPeleando - dañoJugador);
+        System.out.println("atacaste a: " + enemigo.getNombrePnj() + ", y le sacaste " + dañoJugador + " de hp");
 
-        for (Mapa m : mapasDisponibles) {
-            System.out.println(m);
-        } */
+        if (enemigo.getVida() <= 0) {
+            System.out.println("MATASTE A: " + enemigo.getNombrePnj());
+            String nombreBicho = enemigo.getNombrePnj();
+            Integer bichosMatados = this.monstruosMatados.get(nombreBicho);
+            this.monstruosMatados.put(nombreBicho, bichosMatados == null ? 1 : bichosMatados + 1);
+            checkMisiones();
+        }
 
-        mundo.imprimirCaminos(this.posicion);
     }
-
+    
 
     @Override
     public String toString() {
         return "Jugador{" + "nombreJugador=" + nombreJugador + ", hp=" + hp + ", nivel=" + nivel + ", mochila="
                 + mochila + ", misiones=" + misiones + ", posicion=" + posicion + '}';
     }
+    public int getMonstruosMatados(String monstruo) {
+        Integer n = this.monstruosMatados.get(monstruo);
+        if (n == null) {
+            monstruosMatados.put(monstruo, 0);
+        }
+        return monstruosMatados.get(monstruo);
+    }
     // prueba 2
-
-
+    private void initMisiones() {
+        Mision forkear = new Mision("Subir de nivel", "Alcanzar el nivel dos.", (m,j) -> {
+            if (j.getNivel() < 2) {
+                return false;
+            }
+            j.setMaxHp(j.getmaxHP() + 25);
+            j.setHp(j.getHp() + 25);
+            return m.setEstadoMision(true);
+        });
+        var matarDuende = new Mision("Matar un duende", "Mata un duende", (m,j) -> {
+            Integer n = j.getMonstruosMatados("Duende");
+            if (n < 1) return false;
+            
+            var espada = new Item("Espada mataduendes");
+            j.recoger(espada);
+            return m.setEstadoMision(true);
+        });
+        this.aceptarMision(matarDuende);
+        this.aceptarMision(forkear);
+    }
 
 }
