@@ -113,16 +113,17 @@ public class Jugador {
         checkMisiones();
     }
 
-    public void setPosicion(int i_destino) {
+    public boolean setPosicion(int i_destino) {
+        ArrayList<Mapa> mapasDisponibles = mundo.getCaminosDisponiblesMapa(this.posicion);
         Mapa destino = mundo.getMapa(i_destino);
         if (destino == null)
-            return;
-        ArrayList<Mapa> mapasDisponibles = mundo.getCaminosDisponiblesMapa(this.posicion);
+            return false;
         if (!mapasDisponibles.contains(destino)) {
-            System.out.println("Movimiento no permitido!");
+            return false;
         }
         this.posicion = destino;
         checkMisiones();
+        return true;
     }
 
     public boolean checkMision(Mision m) {
