@@ -1,33 +1,19 @@
 package parcial2eda;
 
-
 public class Item {
 
-    private String nombreItem;
-    
-    
-    public Item(String nombreItem) {
-        this.nombreItem = nombreItem;
+    private String nombre;
+
+    public Item(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getNombreItem() {
-        return nombreItem;
+    public String getNombre() {
+        return this.nombre;
     }
 
-    public void setNombreItem(String nombreItem) {
-        this.nombreItem = nombreItem;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 }

@@ -10,7 +10,7 @@ public class Jugador {
     private int hp;
     private int maxHP = 100;
     private int nivel;
-    private HashMap<Item, Integer> mochila;
+    private HashMap<String, Integer> mochila;
     private ArrayList<Mision> misiones;
     private Mapa posicion;
     private HashMap<String, Integer> monstruosMatados;
@@ -27,9 +27,12 @@ public class Jugador {
         initMisiones();
     }
 
-    public void recoger(Item i) {
-        var c = mochila.get(i);
-        mochila.put(i, c == null ? 1 : c + 1);
+    public void recoger(String i) {
+        Integer c = mochila.get(i);
+        if (c == null) {
+            c = 0;
+        }
+        mochila.put(i, c + 1);
         checkMisiones();
     }
 
@@ -89,12 +92,8 @@ public class Jugador {
         checkMisiones();
     }
 
-    public HashMap<Item, Integer> getMochila() {
+    public HashMap<String, Integer> getMochila() {
         return mochila;
-    }
-
-    public void setMochila(HashMap<Item, Integer> mochila) {
-        this.mochila = mochila;
     }
 
     public ArrayList<Mision> getMisiones() {
@@ -151,13 +150,13 @@ public class Jugador {
         }
 
     }
-    
 
     @Override
     public String toString() {
         return "Jugador{" + "nombreJugador=" + nombreJugador + ", hp=" + hp + ", nivel=" + nivel + ", mochila="
                 + mochila + ", misiones=" + misiones + ", posicion=" + posicion + '}';
     }
+
     public int getMonstruosMatados(String monstruo) {
         Integer n = this.monstruosMatados.get(monstruo);
         if (n == null) {
@@ -165,9 +164,10 @@ public class Jugador {
         }
         return monstruosMatados.get(monstruo);
     }
+
     // prueba 2
     private void initMisiones() {
-        Mision forkear = new Mision("Subir de nivel", "Alcanzar el nivel dos.", (m,j) -> {
+        Mision forkear = new Mision("Subir de nivel", "Alcanzar el nivel dos.", (m, j) -> {
             if (j.getNivel() < 2) {
                 return false;
             }
@@ -175,16 +175,29 @@ public class Jugador {
             j.setHp(j.getHp() + 25);
             return m.setEstadoMision(true);
         });
-        var matarDuende = new Mision("Matar un duende", "Mata un duende", (m,j) -> {
+        var matarDuende = new Mision("Matar un duende", "Mata un duende", (m, j) -> {
             Integer n = j.getMonstruosMatados("Duende");
-            if (n < 1) return false;
-            
-            var espada = new Item("Espada mataduendes");
-            j.recoger(espada);
+            if (n < 1)
+                return false;
+
+            j.recoger("Espada mataduendes");
+            return m.setEstadoMision(true);
+        });
+
+        var conseguirHongo = new Mision("Encontrar un hongo", "Encontrar un hongo mágico.", (m, j) -> {
+            Integer n = j.getMochila().get("Hongos");
+            if (n == null)
+                n = 0;
+            if (n < 1)
+                return false;
+            j.getMochila().put("Hongos", n - 1);
+            j.recoger("Te de cucumelo");
+            System.out.println("Mision completada. Recibiste un te de cucumelo");
             return m.setEstadoMision(true);
         });
         this.aceptarMision(matarDuende);
         this.aceptarMision(forkear);
+        this.aceptarMision(conseguirHongo);
     }
 
 }

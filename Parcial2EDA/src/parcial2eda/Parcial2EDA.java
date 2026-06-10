@@ -3,7 +3,6 @@ package parcial2eda;
 import java.util.Scanner;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Parcial2EDA {
@@ -13,84 +12,15 @@ public class Parcial2EDA {
     static Mundo mundo;
 
     public static void main(String[] args) {
+        limpiarConsola();
         mundo = Mundo.getMundo();
-        mundo.imprimirMatriz();
-        mostrarMatrizResultante(mundo.getMatrizCostos(), "--- Matriz de Costos Mínimos (Floyd-Warshall) ---");
-        mostrarMatrizResultante(mundo.getMatrizCaminos(), "--- Mapa con caminos optimos disponibles ---");
 
-        int opciónInicio;
+        System.out.println("--------------- Bienvenido a Reinos Conectados ---------------");
 
-        System.out.println("-----------------------------");
-        System.out.println("---------------Bienvenido a Reinos Conectados---------------");
-        System.out.println("Para volver a un menú anterior ingrese 0.");
-        System.out.println("-------------------------------");
-        System.out.println("Seleccione una opción:");
-        System.out.println("--------------------------");
-        System.out.println("1. Comenzamos a jugar?");
-        System.out.println("2. Salir del juego");
-
-        while (!teclado.hasNextInt()) {
-            System.out.println("Elige un número válido (1 o 2)");
-            teclado.next();
-        }
-
-        opciónInicio = teclado.nextInt();
-        teclado.nextLine();
-
-        switch (opciónInicio) {
-            case 1:
-                jugador = crearPersonaje();
-                System.out.println("Bienvenido a Reinos Conectados, " + jugador.getNombreJugador() + "!");
-                break;
-            case 2:
-                System.out.println("Saliendo del juego..");
-                System.exit(0);
-        }
-        ;
-
-        int option = -1;
-        do {
-            menuOpciones();
-            option = teclado.nextInt();
-            if (option == 0)
-                break;
-        } while (true);
-
+        jugador = crearPersonaje();
+        menuMapa();
     }
 
-    static void menuOpciones() {
-        int option = 0;
-        while (true) {
-            System.out.println("Estás en " + jugador.getPosicion().getNombreLugar());
-            System.out.println("Cuál es tu siguiente movimiento? ");
-            System.out.println("1. Viajar a otra zona del reino");
-            System.out.println("2. Calcular caminos óptimos");
-            System.out.println("3. Detectar caminos inaccesibles");
-            System.out.println("4. Ver costos de los caminos");
-            System.out.println("5. Ver estado del personaje");
-            System.out.print(": ");
-            option = teclado.nextInt();
-            teclado.nextLine(); // toca limpiar el buffer
-            switch (option) {
-                case 0: return;
-                case 1:
-                    opcionesCaminosDisponibles();
-                    menuViajar();
-                    break;
-                case 2:
-                    opcionCaminosOptimos();
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    System.out.println(jugador);
-                    break;
-            }
-        }
-
-    }
     static void esperarEnter() {
         System.out.println("Presiona enter para continuar...");
         try {
@@ -98,19 +28,148 @@ public class Parcial2EDA {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        limpiarConsola();
     }
+
+    static void limpiarConsola() {
+        System.out.print("\033[H\033[2J");
+    }
+
+    static void menuMapa() {
+
+        String option = "";
+        while (option != "0") {
+            limpiarConsola();
+            System.out.println("Estás en " + jugador.getPosicion().getNombre());
+            System.out.println("[I] Listar objetos en el mapa.");
+            System.out.println("[E] Listar enemigos.");
+            System.out.println("[V] Viajar");
+            System.out.println("[J] Menu del jugador.");
+            option = teclado.nextLine().toUpperCase().trim();
+            switch (option) {
+                case "I":
+                    limpiarConsola();
+                    wea();
+                    break;
+                case "E":
+                    var npc = jugador.getPosicion().getEntidades();
+                    if (npc.size() == 0) {
+                        limpiarConsola();
+                        System.out.println("Ni un alma a la vista.");
+                        esperarEnter();
+                        break;
+                    }
+                    for (int i = 0; i < npc.size(); i++) {
+                        System.out.println("[" + i + "] " + npc.get(i).getNombrePnj());
+                    }
+                    esperarEnter();
+                    break;
+                case "J":
+                    menuJugador();
+                    break;
+                case "V":
+                    menuViajar();
+                    break;
+            }
+        }
+
+    }
+
+    static void wea() {
+        var items = jugador.getPosicion().getItems();
+        if (items.size() == 0) {
+            limpiarConsola();
+            System.out.println("Aqui no hay nada que ver...");
+            esperarEnter();
+            return;
+        }
+        for (int i = 0; i < items.size(); i++) {
+            System.out.println("[" + i + "] " + items.get(i));
+        }
+        System.out.print(": ");
+        int item = teclado.nextInt();
+        jugador.recoger(items.get(item));
+        items.remove(item);
+        esperarEnter();
+    }
+
+    static void menuJugador() {
+        limpiarConsola();
+        System.out.println("A. Calcular caminos óptimos");
+        System.out.println("B. Detectar caminos inaccesibles");
+        System.out.println("C. Ver costos de los caminos");
+        System.out.println("D. Imprimir matriz");
+        System.out.println("E. Estado del personaje");
+
+        String option = teclado.nextLine().toUpperCase().trim();
+
+        switch (option) {
+            case "A":
+                opcionCaminosOptimos();
+                break;
+
+            case "B":
+                limpiarConsola();
+                mundo.detectorZonasInaccesibles(jugador.getPosicion());
+                break;
+
+            case "C":
+                limpiarConsola();
+                mostrarMatrizResultante(mundo.getMatrizCostos(), "Matriz de costos mínimos: ");
+                System.out.println();
+                break;
+
+            case "D":
+                limpiarConsola();
+                System.out.println("Matriz de adyacencia original: ");
+                mundo.imprimirMatriz();
+                break;
+
+            case "E":
+                limpiarConsola();
+                System.out.println(jugador.toString());
+                break;
+
+            default:
+                System.out.println("\n Opción incorrecta. Volviendo..");
+                break;
+
+        }
+        System.out.println("\n presione ENTER para continuar....");
+        teclado.nextLine();
+    }
+
     static void menuViajar() {
-        int option = -1;
-        do {
-            System.out.print("A dónde vamos? : ");
-            option = teclado.nextInt();
-            if (option == 0)
-                return;
-        } while (!jugador.setPosicion(option));
+        limpiarConsola();
+        String option = "";
+        while (option != "0") {
+            System.out.println("[M] para listar los mapa del mundo");
+            opcionesCaminosDisponibles();
+            System.out.print(": ");
+            option = teclado.nextLine().toUpperCase().trim();
+
+            switch (option) {
+                case "M":
+                    limpiarConsola();
+                    mostrarMapasExistentes();
+                    break;
+                default:
+                    try {
+                        int nmapa = Integer.valueOf(option);
+                        jugador.setPosicion(nmapa);
+                        menuMapa();
+                        return;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("No es una opción válida.");
+                    }
+            }
+        }
+
+        esperarEnter();
     }
 
     static void opcionesCaminosDisponibles() { // metodo para imprimir los mapas disponibles y la distancia
-
         ArrayList<Mapa> opcionesMapas = mundo.getCaminosDisponiblesMapa(jugador.getPosicion());
         ArrayList<Mapa> mapasExistentes = mundo.getVertices();
 
@@ -122,7 +181,7 @@ public class Parcial2EDA {
             int distanciaMapaDestino = mundo.getMatrizAdy()[indiceOrigen][numeroMapa];
 
             System.out.println(
-                    "[" + numeroMapa + "]" + m.getNombreLugar() + ", distancia hasta llegar: " + distanciaMapaDestino);
+                    "[" + numeroMapa + "] " + m.getNombre() + ". Distancia hasta llegar: " + distanciaMapaDestino);
         }
     }
 
@@ -142,31 +201,23 @@ public class Parcial2EDA {
         int posicionJugadorInterna = mundo.getVertices().indexOf(jugador.getPosicion());
         int costo = mundo.getMatrizCostos()[posicionJugadorInterna][destinoMapa];
 
-        if(costo == 1000){
+        if (costo == 1000) {
             System.out.println("ESE LUGAR NO TIENE NINGUN CAMINO ACCESIBLE");
+            esperarEnter();
             return;
         }
 
-        System.out.println("Tu camino optimo es el siguiente: ");
+        System.out.println("Tu camino optimo es el siguiente:");
         List<String> rutaOptima = mundo.encontrarCaminoOptimo(jugador.getPosicion(), destinoMapa);
-        for (String lugar : rutaOptima) {
-            System.out.print(lugar + " - ");
-            
-        }
-        System.out.println("");
-        System.out.println("------------");
+        System.out.println(rutaOptima);
         esperarEnter();
     }
 
-    static void mostrarMapasExistentes(){
-
+    static void mostrarMapasExistentes() {
         ArrayList<Mapa> mapasExistentes = mundo.getVertices();
-
-        for(int i = 0; i < mapasExistentes.size(); i++){
-            System.out.println("[" + i  + "]" + mapasExistentes.get(i).getNombreLugar());
+        for (int i = 0; i < mapasExistentes.size(); i++) {
+            System.out.println("[" + i + "] " + mapasExistentes.get(i).getNombre());
         }
-
-
     }
 
     static Jugador crearPersonaje() {
@@ -177,8 +228,9 @@ public class Parcial2EDA {
 
     static void mostrarMatrizResultante(Integer[][] matrizResultado, String header) {
         System.out.println(header);
-        for (int i = 0; i < matrizResultado.length; i++) {
-            for (int j = 0; j < matrizResultado[i].length; j++) {
+        var limit = mundo.getVertices().size();
+        for (int i = 0; i < limit; i++) {
+            for (int j = 0; j < limit; j++) {
                 System.out.print((matrizResultado[i][j] == 1000 ? "X" : matrizResultado[i][j]) + "\t");
             }
             System.out.println(); //
