@@ -8,12 +8,10 @@ public class Mapa {
     
     public String nombre;
     public ArrayList<Pnj> entidades;
-    public ArrayList<Mision> misiones;
     public ArrayList<String> items;
 
     public Mapa() {
         this.entidades = new ArrayList<>();
-        this.misiones = new ArrayList<>();
         this.items = new ArrayList<>();
     }
 
@@ -33,17 +31,16 @@ public class Mapa {
         this.entidades = entidades;
     }
 
-    public ArrayList<Mision> getMisiones() {
-        return misiones;
-    }
-
-    public void setMisiones(ArrayList<Mision> misiones) {
-        this.misiones = misiones;
+    public void agregarEntidad(Pnj entidad){
+        this.entidades.add(entidad);
     }
 
     public ArrayList<String> getItems() {
         return items;
     }
+
+    
+
 
 
     @Override

@@ -37,8 +37,12 @@ public class Jugador {
     }
 
     private void checkMisiones() {
-        for (var m : misiones)
-            m.completarMision(this);
+        for (var m : misiones) {
+            if (m.isEstadoMision()) {
+                continue;
+            }
+            m.verificarMision(this);
+        }
     }
 
     public void aceptarMision(Mision m) {
@@ -105,6 +109,10 @@ public class Jugador {
     }
 
     public void subirDeNivel() {
+        if (this.nivel > 10) {
+            System.out.println("El nivel máximo es 10.");
+            return;
+        }
         this.maxHP += 20;
         this.hp = this.maxHP;
         this.nivel += 1;
@@ -126,29 +134,30 @@ public class Jugador {
     }
 
     public boolean checkMision(Mision m) {
-        return m.completarMision(this);
+        return m.verificarMision(this);
+    }
+
+    public void matarEnemigo(String enemigo) {
+        Integer c = this.monstruosMatados.get(enemigo);
+        if (c == null) {
+            c = 0;
+        }
+        this.monstruosMatados.put(enemigo, c + 1);
+        checkMisiones();
     }
 
     public void atacar(Pnj enemigo) {
-
         if (!enemigo.isHostil()) {
             System.out.println("El pnj :" + enemigo.getNombrePnj() + " es amistoso, no lo podes atacar");
             return;
         }
 
         int dañoJugador = 15 + (int) (Math.random() * 6);
+        dañoJugador += dañoJugador*(this.nivel/10);
         int vidaEnemigoPeleando = enemigo.getVida();
         enemigo.setVida(vidaEnemigoPeleando - dañoJugador);
         System.out.println("atacaste a: " + enemigo.getNombrePnj() + ", y le sacaste " + dañoJugador + " de hp");
-
-        if (enemigo.getVida() <= 0) {
-            System.out.println("MATASTE A: " + enemigo.getNombrePnj());
-            String nombreBicho = enemigo.getNombrePnj();
-            Integer bichosMatados = this.monstruosMatados.get(nombreBicho);
-            this.monstruosMatados.put(nombreBicho, bichosMatados == null ? 1 : bichosMatados + 1);
-            checkMisiones();
-        }
-
+        checkMisiones();
     }
 
     @Override
@@ -157,7 +166,11 @@ public class Jugador {
                 + mochila + ", misiones=" + misiones + ", posicion=" + posicion + '}';
     }
 
-    public int getMonstruosMatados(String monstruo) {
+    public HashMap<String, Integer> getMonstruosMatados() {
+        return this.monstruosMatados;
+    }
+
+    public int getNMonstruosMatados(String monstruo) {
         Integer n = this.monstruosMatados.get(monstruo);
         if (n == null) {
             monstruosMatados.put(monstruo, 0);
@@ -172,16 +185,18 @@ public class Jugador {
                 return false;
             }
             j.setMaxHp(j.getmaxHP() + 25);
-            j.setHp(j.getHp() + 25);
+            System.out.println("Mision completada! Recibiste +25HP");
             return m.setEstadoMision(true);
         });
         var matarDuende = new Mision("Matar un duende", "Mata un duende", (m, j) -> {
-            Integer n = j.getMonstruosMatados("Duende");
-            if (n < 1)
+            Integer n = j.getNMonstruosMatados("Goblin");
+            if (n < 1) {
                 return false;
-
+            }
+            m.setEstadoMision(true);
+            System.out.println("COMPLETASTE LA MISION DE MATAR AL DUENDE, GANASTE UNA ESPADA MATADUENDES");
             j.recoger("Espada mataduendes");
-            return m.setEstadoMision(true);
+            return true;
         });
 
         var conseguirHongo = new Mision("Encontrar un hongo", "Encontrar un hongo mágico.", (m, j) -> {
@@ -192,7 +207,7 @@ public class Jugador {
                 return false;
             j.getMochila().put("Hongos", n - 1);
             j.recoger("Te de cucumelo");
-            System.out.println("Mision completada. Recibiste un te de cucumelo");
+            System.out.println("Mision completada. Te hiciste alto te de cucumelo");
             return m.setEstadoMision(true);
         });
         this.aceptarMision(matarDuende);

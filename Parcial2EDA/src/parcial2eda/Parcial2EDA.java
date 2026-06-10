@@ -18,6 +18,7 @@ public class Parcial2EDA {
         System.out.println("--------------- Bienvenido a Reinos Conectados ---------------");
 
         jugador = crearPersonaje();
+        jugador.setNivel(10);
         menuMapa();
     }
 
@@ -62,6 +63,15 @@ public class Parcial2EDA {
                     for (int i = 0; i < npc.size(); i++) {
                         System.out.println("[" + i + "] " + npc.get(i).getNombrePnj());
                     }
+                    System.out.println("Elegi un enemigo para empezar a combatir:");
+                    int accionElegirEnemigo = teclado.nextInt();
+                    teclado.nextLine();
+
+                    if(accionElegirEnemigo > npc.size() || accionElegirEnemigo < 0){
+                        System.out.println("TE ESTA PEGANDO LA ESQUIZO AMIGO, ESE BICHO NO EXISTE");
+                    } else{
+                        iniciarCombate(jugador, npc.get(accionElegirEnemigo));
+                    }
                     esperarEnter();
                     break;
                 case "J":
@@ -100,6 +110,7 @@ public class Parcial2EDA {
         System.out.println("C. Ver costos de los caminos");
         System.out.println("D. Imprimir matriz");
         System.out.println("E. Estado del personaje");
+        
 
         String option = teclado.nextLine().toUpperCase().trim();
 
@@ -237,6 +248,77 @@ public class Parcial2EDA {
         }
     }
 
+    static void iniciarCombate(Jugador jugador, Pnj enemigo){
+
+        System.out.println("EMPIEZA EL COMBATE ENTRE: " + jugador.getNombreJugador() + " Y " + enemigo.getNombrePnj());
+
+        while(jugador.getHp() > 0 && enemigo.getVida() > 0){
+            limpiarConsola();
+            System.out.println("Vida actual: " + jugador.getHp());
+            System.out.println("Vida de " + enemigo.nombrePnj + ": " + enemigo.getVida());
+            System.out.println("Que queres hacer?");
+            System.out.println("[1] ATACAR");
+            System.out.println("[2] VOLVER ATRAS(COMO TODO CAGON)");
+            System.out.println("--------------------------------");
+            int accionCombate = teclado.nextInt();
+            teclado.nextLine();
+
+            if(accionCombate == 2){
+                double randomCascotazo =  Math.random();
+                if(randomCascotazo > 0.5){
+                    jugador.setHp(jugador.getHp() - 3);
+                    System.out.println("Te comiste un cascotazo intentando escapar y recibiste: " + 3 + " de daño.");
+                    
+                    if(jugador.getHp() <= 0){
+                        System.out.println("COMO VAS A MORIR DE UN CASCOTAZO? XD");
+                        System.exit(0);
+                    }
+
+                }
+                System.out.println("Lograste escapar del combate");
+                esperarEnter();
+                return;
+            }
+
+            if(accionCombate == 1){
+                System.out.println("TU TURNO:");
+                jugador.atacar(enemigo);
+
+                if(enemigo.getVida() <= 0){
+                    jugador.matarEnemigo(enemigo.getNombrePnj());
+                    System.out.println("MATASTE A: " + enemigo.getNombrePnj());
+            
+                    String nombreBichoMatado = enemigo.getNombrePnj(); 
+                    jugador.getMonstruosMatados().put(nombreBichoMatado, jugador.getNMonstruosMatados(nombreBichoMatado) + 1); 
+                    
+
+
+                    jugador.getPosicion().getEntidades().remove(enemigo);
+
+                    esperarEnter();
+                    return;
+                }
+
+                System.out.println("----------");
+                System.out.println("TURNO DEL ENEMIGO");
+                enemigo.atacar(jugador);
+
+                if(jugador.getHp() <= 0){
+                    System.out.println("PERDISTE, COMO TE VA A MATAR ESE BICHO? XD");
+                }
+
+
+            
+                esperarEnter();
+            } else{
+                System.out.println("NO EXISTE ESA OPCION");
+                esperarEnter();
+            }
+
+        }
+
+    }
+
 }
 
-//
+

@@ -65,6 +65,30 @@ public class Mundo {
             matrizAdy[i][i] = 0;
         }
 
+        Pnj goblin = new Pnj("Goblin", true, 10);
+        Pnj esqueleto = new Pnj("Esqueleto", true, 15);
+        Pnj slime = new Pnj("Slime", true, 5);
+        Pnj lobo = new Pnj("Lobo", true, 20);
+        Pnj vampiro = new Pnj("Vampiro", true, 25);
+        Pnj chupacabras = new Pnj("Chupacabras", true, 25);
+        Pnj lobizon = new Pnj("Lobizon", true, 25);
+        Pnj luzmala = new Pnj("LuzMala", true, 20);
+        Pnj ReyFinal = new Pnj("Rey Sin Nombre", true, 185);
+
+        cueva.agregarEntidad(goblin);
+        cueva.agregarEntidad(slime);
+
+        bosque.agregarEntidad(lobo);
+        bosque.agregarEntidad(lobizon);
+        bosque.agregarEntidad(chupacabras);
+
+        mazmorra.agregarEntidad(luzmala);
+        mazmorra.agregarEntidad(esqueleto);
+        mazmorra.agregarEntidad(vampiro);
+
+        castillo.agregarEntidad(ReyFinal);
+
+
         conectar(puebloInicio, bosque, 15);
         conectar(bosque, cueva, 2);
         conectar(cueva, ciudad, 10);
@@ -202,5 +226,7 @@ public class Mundo {
         }
         return listaMapas.reversed();
     }
+
+
 
 }
