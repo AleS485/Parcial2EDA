@@ -10,6 +10,16 @@
 <project name="Parcial2EDA" default="default" basedir=".">
     <description>Builds, tests, and runs the project Parcial2EDA.</description>
     <import file="nbproject/build-impl.xml"/>
+    <target name="compile">
+    <mkdir dir="build/classes"/>
+    <javac srcdir="src" destdir="build/classes"/>
+    
+    <copy todir="build/classes">
+        <fileset dir="src">
+            <include name="**/*.mid"/>
+        </fileset>
+    </copy>
+</target>
     <!--
 
     There exist several targets which are by default empty and which can be 

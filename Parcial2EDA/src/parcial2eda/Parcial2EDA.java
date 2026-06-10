@@ -12,6 +12,7 @@ public class Parcial2EDA {
     static Mundo mundo;
 
     public static void main(String[] args) {
+
         limpiarConsola();
         mundo = Mundo.getMundo();
 
