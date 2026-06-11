@@ -161,8 +161,14 @@ public class Jugador {
 
     @Override
     public String toString() {
-        return "Jugador{" + "nombreJugador=" + nombreJugador + ", hp=" + hp + ", nivel=" + nivel + ", mochila="
-                + mochila + ", misiones=" + misiones + ", posicion=" + posicion + '}';
+        return  "----------------" +
+                "ESTADISTICAS:" + "\n" +
+                "Nombre: " + nombreJugador + "\n" +
+                "Nivel: " + nivel + "\n" +
+                "Ubicacion: " + posicion.getNombre() + "\n" +
+                "Mochila: " + mochila + "\n" +
+                "----------------";
+
     }
 
     public HashMap<String, Integer> getMonstruosMatados() {
