@@ -2,7 +2,7 @@
 package parcial2eda;
 
 
-public class Mision {
+public class Mision { 
     public interface ICMision {
         public boolean exec(Mision m, Jugador j);
     }

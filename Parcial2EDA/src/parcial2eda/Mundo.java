@@ -123,7 +123,7 @@ public class Mundo {
         return vertices.get(indice);
 
     }
-
+    //
     public ArrayList<Mapa> getCaminosDisponiblesMapa(Mapa mapa) {
 
         ArrayList<Mapa> mapasDisponibles = new ArrayList<>();
@@ -143,7 +143,7 @@ public class Mundo {
         return mapasDisponibles;
     }
 
-    // hasta longitud de mi arreglo de mapas, caminos optimos
+    //
     public void detectorZonasInaccesibles(Mapa posicionActual) {
 
         int indiceOrigen = vertices.indexOf(posicionActual);
@@ -170,7 +170,7 @@ public class Mundo {
         }
 
     }
-
+    // -
     public void imprimirMatriz() {
         for (int i = 0; i < vertices.size(); i++) {
             for (int j = 0; j < vertices.size(); j++) {
@@ -191,6 +191,8 @@ public class Mundo {
         return vertices;
     }
 
+    // actualiza las matrices de costos y de caminos
+
     private void FloydWarshall() {
         for (int i = 0; i < CANTIDADMAXIMA; i++) {
             for (int j = 0; j < CANTIDADMAXIMA; j++) {
@@ -203,19 +205,21 @@ public class Mundo {
             }
         }
 
-        for (int k = 0; k < CANTIDADMAXIMA; k++) {
-            for (int i = 0; i < CANTIDADMAXIMA; i++) {
-                for (int j = 0; j < CANTIDADMAXIMA; j++) {
-                    if (matrizCostos[i][k] != 1000 && matrizCostos[k][j] != 1000) {
-                        if (matrizCostos[i][j] > matrizCostos[i][k] + matrizCostos[k][j]) {
-                            matrizCostos[i][j] = matrizCostos[i][k] + matrizCostos[k][j];
-                            matrizCaminos[i][j] = matrizCaminos[k][j];
+        for (int i = 0; i < CANTIDADMAXIMA; i++) {
+            for (int j = 0; j < CANTIDADMAXIMA; j++) {
+                for (int k = 0; k < CANTIDADMAXIMA; k++) {
+                    if (matrizCostos[j][i] != 1000 && matrizCostos[i][k] != 1000) {
+                        if (matrizCostos[j][k] > matrizCostos[j][i] + matrizCostos[i][k]) {
+                            matrizCostos[j][k] = matrizCostos[j][i] + matrizCostos[i][k];
+                            matrizCaminos[j][k] = matrizCaminos[i][k];
                         }
                     }
                 }
             }
         }
     }
+
+    // arma la lista de caminos optimos de una posicion a otra
 
     public List<String> encontrarCaminoOptimo(Mapa origen, Integer destino) {
         var i_origen = vertices.indexOf(origen);
