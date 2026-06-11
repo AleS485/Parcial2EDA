@@ -177,8 +177,11 @@ public class Mundo {
     }
 
     public void imprimirMatriz() {
-        for (int i = 0; i < CANTIDADMAXIMA; i++) {
-            for (int j = 0; j < CANTIDADMAXIMA; j++) {
+        for (int i = 0; i < vertices.size(); i++) {
+            for (int j = 0; j < vertices.size(); j++) {
+                if(this.matrizAdy[j][i] == 1000){
+                    System.out.print("X" + "\t");
+                }
                 System.out.print(this.matrizAdy[i][j] + "\t");
             }
             System.out.println();

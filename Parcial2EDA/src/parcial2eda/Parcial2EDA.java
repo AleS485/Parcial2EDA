@@ -66,7 +66,7 @@ public class Parcial2EDA {
             switch (option) {
                 case "I":
                     limpiarConsola();
-                    wea();
+                    listarObjetosMapa();
                     break;
                 case "E":
                     var npc = jugador.getPosicion().getEntidades();
@@ -108,7 +108,7 @@ public class Parcial2EDA {
 
     }
 
-    static void wea() {
+    static void listarObjetosMapa() {
         var items = jugador.getPosicion().getItems();
         if (items.size() == 0) {
             limpiarConsola();
@@ -156,8 +156,7 @@ public class Parcial2EDA {
 
             case "D":
                 limpiarConsola();
-                System.out.println("Matriz de adyacencia original: ");
-                mundo.imprimirMatriz();
+                mostrarMatrizResultante(mundo.getMatrizAdy(), "matrizAdyacencia");
                 break;
 
             case "E":
