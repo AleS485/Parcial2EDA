@@ -10,6 +10,7 @@ public class Parcial2EDA {
     static Scanner teclado = new Scanner(System.in);
     static Jugador jugador;
     static Mundo mundo;
+    public static boolean modoHeroe = false;
 
     public static void main(String[] args) {
 
@@ -39,6 +40,15 @@ public class Parcial2EDA {
 
     static void menuMapa() {
 
+        if(mundo.getVertices().indexOf(jugador.getPosicion()) >= 7){
+            limpiarConsola();
+            System.out.println("LLEGASTE A TU NUEVO LUGAR: " + jugador.getPosicion().getNombre());
+            System.out.println("SALVASTE AL REINO Y PODES DESCANSAR, GRACIAS POR JUGAR");
+            System.exit(0);
+
+        }
+
+
         String option = "";
         while (option != "0") {
             limpiarConsola();
@@ -47,6 +57,12 @@ public class Parcial2EDA {
             System.out.println("[E] Listar enemigos.");
             System.out.println("[V] Viajar");
             System.out.println("[J] Menu del jugador.");
+
+            if(modoHeroe){
+                System.out.println("[C] Crear camino del heroe.");
+            }
+
+
             option = teclado.nextLine().toUpperCase().trim();
             switch (option) {
                 case "I":
@@ -67,7 +83,6 @@ public class Parcial2EDA {
                     System.out.println("Elegi un enemigo para empezar a combatir:");
                     int accionElegirEnemigo = teclado.nextInt();
                     teclado.nextLine();
-
                     if(accionElegirEnemigo > npc.size() || accionElegirEnemigo < 0){
                         System.out.println("TE ESTA PEGANDO LA ESQUIZO AMIGO, ESE BICHO NO EXISTE");
                     } else{
@@ -80,6 +95,9 @@ public class Parcial2EDA {
                     break;
                 case "V":
                     menuViajar();
+                    break;
+                case "C":
+                    menuModoHeroe();
                     break;
             }
         }
@@ -111,6 +129,7 @@ public class Parcial2EDA {
         System.out.println("C. Ver costos de los caminos");
         System.out.println("D. Imprimir matriz");
         System.out.println("E. Estado del personaje");
+        System.out.println("F. Ver Misiones");
         
 
         String option = teclado.nextLine().toUpperCase().trim();
@@ -140,6 +159,22 @@ public class Parcial2EDA {
             case "E":
                 limpiarConsola();
                 System.out.println(jugador.toString());
+                break;
+
+            case "F":
+                limpiarConsola();
+                System.out.println("Menu de misiones");
+                ArrayList<Mision> listaMisiones = jugador.getMisiones();
+
+                if(listaMisiones.isEmpty()){
+                    System.out.println("No has aceptado ninguna mision");
+                } else{
+                    for(int i = 0; i < listaMisiones.size(); i++){
+                        Mision m = listaMisiones.get(i);
+                        String estadoMision = m.isEstadoMision() ? "[COMPLETADA]" : "[PENDIENTE]";
+                        System.out.println((i + 1) + ". " + estadoMision + " " + m.getObjetivoMision());
+                    }
+                }
                 break;
 
             default:
@@ -319,6 +354,51 @@ public class Parcial2EDA {
         }
 
     }
+
+    static void menuModoHeroe(){
+
+        limpiarConsola();
+        System.out.println("TU NUEVO PODER ESPERA A QUE LO USES");
+        System.out.println("-----------------------------------");
+
+
+        if(mundo.getVertices().size() >= 10){ // limite de 10 mundos, por las dudas
+            System.out.println("Este reino no puede tener mas de 10 mapas");
+            esperarEnter();
+            return;
+        }
+
+        System.out.println("Para empezar, desde donde queres crear tu nuevo camino?");
+        mostrarMapasExistentes();
+        System.out.println("Ingresa el mapa del origen: ");
+        int mundoOrigen = teclado.nextInt();
+        teclado.nextLine();
+
+        if(mundoOrigen >= 0 && mundoOrigen < mundo.getVertices().size()){
+            System.out.println("Que distancia queres darle a este nuevo lugar?");
+            int distanciaMundos = teclado.nextInt();
+            teclado.nextLine();
+
+            System.out.println("Ingresa el nombre de tu nuevo lugar: ");
+            String nombreMapaNuevo = teclado.nextLine();
+
+            Mapa nuevoMapa = new Mapa();
+            nuevoMapa.setNombre(nombreMapaNuevo);
+            mundo.getVertices().add(nuevoMapa);
+
+            Mapa mapaOrigen = mundo.getVertices().get(mundoOrigen);
+            mundo.conectar(mapaOrigen, nuevoMapa, distanciaMundos);
+            System.out.println("TU NUEVO LUGAR Y CAMINO HAN SIDO CREADOS");
+        } else{
+            System.out.println("ESTE MAPA NO EXISTE, POR LO QUE NO PODES CREAR NADA");
+        }
+
+        esperarEnter();
+
+
+    }
+
+
 
 }
 

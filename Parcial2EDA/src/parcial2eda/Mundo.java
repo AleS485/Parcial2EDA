@@ -50,7 +50,8 @@ public class Mundo {
         Mapa mazmorra = new Mapa();
         mazmorra.setNombre("mazmorra");
         Mapa castillo = new Mapa();
-        castillo.setNombre("castillo");
+        castillo.setNombre("castillo"); 
+
         // final
 
         vertices.add(puebloInicio);
@@ -93,7 +94,7 @@ public class Mundo {
         conectar(bosque, cueva, 2);
         conectar(cueva, ciudad, 10);
         conectar(ciudad, mazmorra, 20);
-        conectar(mazmorra, castillo, 35);
+        //conectar(mazmorra, castillo, 35); para probar mision de la mazmorra y camino bloqueado
         conectar(mazmorra, bosque, 35);
         FloydWarshall();
     }

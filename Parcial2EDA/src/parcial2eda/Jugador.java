@@ -210,9 +210,52 @@ public class Jugador {
             System.out.println("Mision completada. Te hiciste alto te de cucumelo");
             return m.setEstadoMision(true);
         });
+
+        var visionCaminoCastillo = new Mision("Llegar a la mazmorra", "Lograr llegar a la mazmorra, los rumores dicen que una vision nacera y el camino al castillo sera revelado", (m, j) -> {
+            if(!j.getPosicion().getNombre().equalsIgnoreCase("mazmorra")){
+                return false;
+            }
+            m.setEstadoMision(true);
+
+            System.out.println("Llegaste a la mazmorra peligrosa");
+            System.out.println("En tu mente escuchas susurros y observas un resplandor");
+            System.out.println("Ahora conoces el camino para ir al castillo, preparate para derrotar al rey sin nombre");
+
+            Parcial2EDA.esperarEnter();
+
+            Mundo mundoInterno = Mundo.getMundo();
+
+            Mapa mazmorra = mundoInterno.getVertices().get(4);
+            Mapa castillo = mundoInterno.getVertices().get(5);
+
+            mundoInterno.conectar(mazmorra, castillo, 45);
+
+            return true;
+
+        });
+
+        var matarAlRey = new Mision("Derrotar al rey sin nombre", "Vence al rey sin nombre en su castillo", (m, j) -> {
+            Integer n = j.getNMonstruosMatados("Rey Sin Nombre");
+            if(n < 1){
+                return false;
+            }
+            m.setEstadoMision(true);
+            System.out.println("=========================================");
+            System.out.println("LO LOGRASTE! MATASTE AL REY SIN NOMBRE");
+            System.out.println("=========================================");
+            System.out.println("ACABAS DE CONVERTIRTE EN UN HEROE, SENTIS UN GRAN PODER SURGIENDO EN TI");
+            System.out.println("CONSEGUISTE EL PODER DE CREAR NUEVO LUGARES Y UNIFICARLOS MEDIANTE TUS PROPIOS CAMINOS, EL REINO NO VOLVERA A SEPARARSE");
+
+            Parcial2EDA.modoHeroe = true;
+
+            return true;
+        });
+
         this.aceptarMision(matarDuende);
         this.aceptarMision(forkear);
         this.aceptarMision(conseguirHongo);
+        this.aceptarMision(matarAlRey);
+        this.aceptarMision(visionCaminoCastillo);
     }
 
 }
