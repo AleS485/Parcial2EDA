@@ -66,15 +66,15 @@ public class Mundo {
             matrizAdy[i][i] = 0;
         }
 
-        Pnj goblin = new Pnj("Goblin", true, 10);
-        Pnj esqueleto = new Pnj("Esqueleto", true, 15);
-        Pnj slime = new Pnj("Slime", true, 5);
-        Pnj lobo = new Pnj("Lobo", true, 20);
-        Pnj vampiro = new Pnj("Vampiro", true, 25);
-        Pnj chupacabras = new Pnj("Chupacabras", true, 25);
-        Pnj lobizon = new Pnj("Lobizon", true, 25);
-        Pnj luzmala = new Pnj("LuzMala", true, 20);
-        Pnj ReyFinal = new Pnj("Rey Sin Nombre", true, 145);
+        Pnj goblin = new Pnj("Goblin", true, 10, 5);
+        Pnj esqueleto = new Pnj("Esqueleto", true, 15, 10);
+        Pnj slime = new Pnj("Slime", true, 5, 5);
+        Pnj lobo = new Pnj("Lobo", true, 20, 10);
+        Pnj vampiro = new Pnj("Vampiro", true, 25, 15);
+        Pnj chupacabras = new Pnj("Chupacabras", true, 25, 10);
+        Pnj lobizon = new Pnj("Lobizon", true, 25, 15);
+        Pnj luzmala = new Pnj("LuzMala", true, 20,10);
+        Pnj ReyFinal = new Pnj("Rey Sin Nombre", true, 145, 25);
 
         cueva.agregarEntidad(goblin);
         cueva.agregarEntidad(slime);
@@ -116,11 +116,8 @@ public class Mundo {
     public Mapa getMapa(int indice) {
 
         if (indice < 0 || indice > vertices.size()) {
-            System.out.println("Te perdiste en el vacio");
-            System.out.println("Perdiste el juego, al menos dejaste un hermoso cuerpo.");
-            Mapa vacio = new Mapa();
-            vacio.setNombre("Vacio");
-            return vacio;
+            
+            return null;
         }
 
         return vertices.get(indice);
@@ -155,8 +152,6 @@ public class Mundo {
             System.out.println("ESTE MAPA NO EXISTE EN EL MUNDO");
             return;
         }
-
-        System.out.println("SE ESTAN ANALIZANDO CAMINOS INNACESIBLES DESDE: " + posicionActual.getNombre());
 
         boolean flagInaccesible = false;
 

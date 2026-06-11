@@ -294,7 +294,7 @@ public class Parcial2EDA {
         while(jugador.getHp() > 0 && enemigo.getVida() > 0){
             limpiarConsola();
             System.out.println("Vida actual: " + jugador.getHp());
-            System.out.println("Vida de " + enemigo.nombrePnj + ": " + enemigo.getVida());
+            System.out.println("Vida de " + enemigo.getNombrePnj() + ": " + enemigo.getVida());
             System.out.println("Que queres hacer?");
             System.out.println("[1] ATACAR");
             System.out.println("[2] VOLVER ATRAS(COMO TODO CAGON)");
