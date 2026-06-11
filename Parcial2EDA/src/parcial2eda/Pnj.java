@@ -49,7 +49,7 @@ public class Pnj {
 
         int hpJugadorObjetivo = jugador.getHp();
         jugador.setHp(hpJugadorObjetivo - this.dañoPnj);
-        System.out.println(this.nombrePnj + " ataco a: " + jugador.getNombreJugador() + ", le saco "+ this.dañoPnj + " de HP");
+        
         
         
     

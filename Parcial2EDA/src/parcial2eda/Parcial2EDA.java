@@ -321,9 +321,18 @@ public class Parcial2EDA {
 
             if(accionCombate == 1){
                 System.out.println("TU TURNO:");
-                jugador.atacar(enemigo);
+                int valorAtaque = jugador.atacar(enemigo);
+                if(valorAtaque == -1){
+                    System.out.println("No podes atacar a este pnj");
+                } else if(valorAtaque == 0){
+                    System.out.println("El chobi te mira desde arriba y se te caga de risa xD");
+                } else{
+                    System.out.println("Atacaste a: " + enemigo.getNombrePnj() + ", le hiciste: " + valorAtaque  + ", de daño" );
+                }
+                
 
                 if(enemigo.getVida() <= 0){
+                    
                     jugador.matarEnemigo(enemigo.getNombrePnj());
                     System.out.println("MATASTE A: " + enemigo.getNombrePnj());
             
@@ -342,6 +351,7 @@ public class Parcial2EDA {
                 System.out.println("TURNO DEL ENEMIGO");
                 enemigo.atacar(jugador);
 
+                System.out.println("Recibiste: " + enemigo.getDañoPnj() + " de daño");
                 if(jugador.getHp() <= 0){
                     System.out.println("PERDISTE, COMO TE VA A MATAR ESE BICHO? XD");
                 }

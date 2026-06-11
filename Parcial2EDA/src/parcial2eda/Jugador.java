@@ -76,9 +76,6 @@ public class Jugador {
         }
         if (hp > maxHP)
             hp = maxHP;
-        if (hp <= 0) {
-            System.out.println("MORISTE, COMO TE VA A MATAR ESE CHOBI? XD");
-        }
     }
 
     public int getmaxHP() {
@@ -149,18 +146,17 @@ public class Jugador {
         checkMisiones();
     }
 
-    public void atacar(Pnj enemigo) {
+    public int atacar(Pnj enemigo) {
         if (!enemigo.isHostil()) {
-            System.out.println("El pnj :" + enemigo.getNombrePnj() + " es amistoso, no lo podes atacar");
-            return;
+            return -1;
         }
 
         int dañoJugador = 15 + (int) (Math.random() * 6);
         dañoJugador += dañoJugador*(this.nivel/10);
         int vidaEnemigoPeleando = enemigo.getVida();
         enemigo.setVida(vidaEnemigoPeleando - dañoJugador);
-        System.out.println("atacaste a: " + enemigo.getNombrePnj() + ", y le sacaste " + dañoJugador + " de hp");
         checkMisiones();
+        return dañoJugador;
     }
 
     @Override
