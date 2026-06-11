@@ -10,7 +10,7 @@ public class Parcial2EDA {
     static Scanner teclado = new Scanner(System.in);
     static Jugador jugador;
     static Mundo mundo;
-    public static boolean modoHeroe = false;
+    public static boolean modoDios = false;
 
     public static void main(String[] args) {
 
@@ -20,7 +20,6 @@ public class Parcial2EDA {
         System.out.println("--------------- Bienvenido a Reinos Conectados ---------------");
 
         jugador = crearPersonaje();
-        jugador.setNivel(10);
         menuMapa();
     }
 
@@ -58,8 +57,8 @@ public class Parcial2EDA {
             System.out.println("[V] Viajar");
             System.out.println("[J] Menu del jugador.");
 
-            if(modoHeroe){
-                System.out.println("[C] Crear camino del heroe.");
+            if(modoDios){
+                System.out.println("[C] USAR TU PODER COMO DIOS.");
             }
 
 
@@ -97,7 +96,12 @@ public class Parcial2EDA {
                     menuViajar();
                     break;
                 case "C":
-                    menuModoHeroe();
+                    if(modoDios){
+                        menuModoDios();
+                    } else{
+                        System.out.println("Que haces che?");
+                        esperarEnter();
+                    }
                     break;
             }
         }
@@ -355,7 +359,7 @@ public class Parcial2EDA {
 
     }
 
-    static void menuModoHeroe(){
+    static void menuModoDios(){
 
         limpiarConsola();
         System.out.println("TU NUEVO PODER ESPERA A QUE LO USES");

@@ -38,7 +38,6 @@ public class Mision {
     public boolean verificarMision(Jugador jugador){
         boolean r = icom_mision.exec(this, jugador);
         if (r) {
-            System.out.println("Adicionalmente ganas un nivel.");
             jugador.subirDeNivel();
         }
         return r;

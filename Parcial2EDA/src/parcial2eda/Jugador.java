@@ -70,6 +70,10 @@ public class Jugador {
 
     public void setHp(int hp) {
         this.hp = hp;
+        if(hp <= 0){
+            System.out.println("Perdiste el juego");
+            System.exit(0);
+        }
         if (hp > maxHP)
             hp = maxHP;
         if (hp <= 0) {
@@ -109,8 +113,7 @@ public class Jugador {
     }
 
     public void subirDeNivel() {
-        if (this.nivel > 10) {
-            System.out.println("El nivel máximo es 10.");
+        if (this.nivel >= 10) {
             return;
         }
         this.maxHP += 20;
@@ -243,10 +246,10 @@ public class Jugador {
             System.out.println("=========================================");
             System.out.println("LO LOGRASTE! MATASTE AL REY SIN NOMBRE");
             System.out.println("=========================================");
-            System.out.println("ACABAS DE CONVERTIRTE EN UN HEROE, SENTIS UN GRAN PODER SURGIENDO EN TI");
+            System.out.println("ACABAS DE CONVERTIRTE EN UN DIOS, SENTIS UN GRAN PODER SURGIENDO EN TI");
             System.out.println("CONSEGUISTE EL PODER DE CREAR NUEVO LUGARES Y UNIFICARLOS MEDIANTE TUS PROPIOS CAMINOS, EL REINO NO VOLVERA A SEPARARSE");
 
-            Parcial2EDA.modoHeroe = true;
+            Parcial2EDA.modoDios = true;
 
             return true;
         });

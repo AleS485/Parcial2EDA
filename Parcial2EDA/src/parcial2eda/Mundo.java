@@ -74,7 +74,7 @@ public class Mundo {
         Pnj chupacabras = new Pnj("Chupacabras", true, 25);
         Pnj lobizon = new Pnj("Lobizon", true, 25);
         Pnj luzmala = new Pnj("LuzMala", true, 20);
-        Pnj ReyFinal = new Pnj("Rey Sin Nombre", true, 185);
+        Pnj ReyFinal = new Pnj("Rey Sin Nombre", true, 145);
 
         cueva.agregarEntidad(goblin);
         cueva.agregarEntidad(slime);

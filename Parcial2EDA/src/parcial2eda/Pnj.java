@@ -70,7 +70,7 @@ public class Pnj {
                 dañoPnj = 20;
                 break;
             case "Rey Sin Nombre":
-                dañoPnj = 25;
+                dañoPnj = 20;
                 break;
         } 
         int hpJugadorObjetivo = jugador.getHp();
